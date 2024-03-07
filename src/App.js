@@ -162,8 +162,6 @@ useEffect(()=>
               </p>
             </p>
 
-            {/*<p className='bg-gray-700 rounded-md p-2 w-fit m-2'> Umidade <p className='text-3xl'> { umidadeAtual }%</p> </p>*/}
-
             <p className='bg-gray-700 rounded-md pt-1 p-2 w-fit m-2'> Vento
               <p className='flex'>
                 <span className='text-3xl'> 
@@ -180,13 +178,6 @@ useEffect(()=>
                 }
               </p>
             </p>
-
-            {/*<p className='bg-gray-700 rounded-md pt-1 p-2 w-fit m-2'> Vento
-              <p>
-                <span className='text-3xl'> { direcaoAtual }°</span> 
-                <span className='text-3xl'> { velocidadeAtual } km/h</span> 
-              </p>
-            </p>*/}
          </center>
         </article>
       </section> 

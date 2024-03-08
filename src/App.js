@@ -1,5 +1,6 @@
 import './App.css';
 import { useState, useEffect } from 'react';
+import Card from './Card';
 
 function App() {
   const [tempAtual, setTempAtual] = useState();
@@ -8,20 +9,27 @@ function App() {
   const [direcaoAtual, setDirecaoAtual] = useState();
   const [velocidadeAtual, setVelocidadeAtual] = useState();
   const [horaAtual, setHoraAtual] = useState();
+  const [pressaoAtual, setPressaoAtual] = useState();
+  const [condicaoAtual, setCondicaoAtual] = useState();
+  const [UVAtual, setUVAtual] = useState();
+  const [precipitacaoAtual, setPrecipitacaoAtual] = useState();
+
   const [tendenciaTemp, setTendenciaTemp] = useState('UP');
   const [tendenciaSensacao, setTendenciaSensacao] = useState('UP');
   const [tendenciaUmidade, setTendenciaUmidade] = useState('UP');
   const [tendenciaVento, setTendenciaVento] = useState('UP');
-  
-//  function ordenar(a, b) {
-//    if (a.seq < b.seq ) {
-//      return -1;
-//    } else if (a.seq > b.seq ) {
-//      return 1;
-//    } else {
-//       return 0;
-//    }
-//}
+  const [tendenciaPressao, setTendenciaPressao] = useState('UP');
+  const [tendenciaUV, setTendenciaUV] = useState('UP');
+
+  function ordenar(a, b) {
+    if (a.seq < b.seq ) {
+      return -1;
+    } else if (a.seq > b.seq ) {
+      return 1;
+    } else {
+       return 0;
+    }
+}
 
 function getHoraAtual(conjunto){
   var seqAtual = conjunto.length - 1;
@@ -32,13 +40,59 @@ function getHoraAtual(conjunto){
   return hora + ':' + minutos;
 }
 
+function getCondicaoAtual(conjunto){
+  var condicoes = {'Showers in the Vicinity': 'Chuva ao redor', 'Heavy Rain': 'Chuva forte', Rain: 'Chuva', Cloudy: 'Nublado', 
+                  Fair: 'Céu claro', 'Partly Cloudy': 'Parcialmente nublado', 'Light Rain': 'Chuva fraca', 'Rain Shower': 'Chuva forte', 
+                  Sunny: 'Ensolarado', 'Mostly Cloudy': 'Encoberto'};
+  var seqAtual = conjunto.length - 1;
+  var condicaoOriginal = conjunto[seqAtual].cobertura;
+
+  return condicoes[condicaoOriginal];
+}
+
+function getUVAtual(conjunto){
+  var seqAtual = conjunto.length - 1;
+
+  if (conjunto[seqAtual].uv === conjunto[seqAtual-1].uv){
+    setTendenciaUV('EQ')
+  }else{
+    if (conjunto[seqAtual].uv > conjunto[seqAtual-1].uv){
+      setTendenciaUV('UP')
+    }else{
+      setTendenciaUV('DOWN')
+    }
+  }
+  
+  return conjunto[seqAtual].uv;
+}
+
+function getPressaoAtual(conjunto){
+  var seqAtual = conjunto.length - 1;
+
+if (conjunto[seqAtual].pressao === conjunto[seqAtual-1].pressao){
+  setTendenciaPressao('EQ')
+}else{
+  if (conjunto[seqAtual].pressao > conjunto[seqAtual-1].pressao){
+    setTendenciaPressao('UP')
+  }else{
+    setTendenciaPressao('DOWN')
+  }
+}
+  
+  return conjunto[seqAtual].pressao;
+}
+
 function getTemperaturaAtual(conjunto){
   var seqAtual = conjunto.length - 1;
 
-  if (conjunto[seqAtual].temperatura > conjunto[seqAtual-1].temperatura){
-    setTendenciaTemp('UP')
+  if (conjunto[seqAtual].temperatura === conjunto[seqAtual-1].temperatura){
+    setTendenciaTemp('EQ')
   }else{
-    setTendenciaTemp('DOWN')
+    if (conjunto[seqAtual].temperatura > conjunto[seqAtual-1].temperatura){
+      setTendenciaTemp('UP')
+    }else{
+      setTendenciaTemp('DOWN')
+    }
   }
   
   return conjunto[seqAtual].temperatura;
@@ -47,10 +101,14 @@ function getTemperaturaAtual(conjunto){
 function getSensacaoAtual(conjunto){
   var seqAtual = conjunto.length - 1;
   
-  if (conjunto[seqAtual].sensacao > conjunto[seqAtual-1].sensacao){
-    setTendenciaSensacao('UP')
+  if (conjunto[seqAtual].sensacao === conjunto[seqAtual-1].sensacao){
+    setTendenciaSensacao('EQ')
   }else{
-    setTendenciaSensacao('DOWN')
+    if (conjunto[seqAtual].sensacao > conjunto[seqAtual-1].sensacao){
+      setTendenciaSensacao('UP')
+    }else{
+      setTendenciaSensacao('DOWN')
+    }
   }
 
   return conjunto[seqAtual].sensacao;
@@ -59,10 +117,14 @@ function getSensacaoAtual(conjunto){
 function getUmidadeAtual(conjunto){
   var seqAtual = conjunto.length - 1;
   
-  if (conjunto[seqAtual].umidade > conjunto[seqAtual-1].umidade){
-    setTendenciaUmidade('UP')
+  if (conjunto[seqAtual].umidade === conjunto[seqAtual-1].umidade){
+    setTendenciaUmidade('EQ')
   }else{
-    setTendenciaUmidade('DOWN')
+    if (conjunto[seqAtual].umidade > conjunto[seqAtual-1].umidade){
+      setTendenciaUmidade('UP')
+    }else{
+      setTendenciaUmidade('DOWN')
+    }
   }
 
   return conjunto[seqAtual].umidade;
@@ -74,13 +136,23 @@ function getDirecaoAtual(conjunto){
   return conjunto[seqAtual].direcao;
 }
 
+function getPrecipitacaoAtual(conjunto){
+  var seqAtual = conjunto.length - 1;
+  
+  return conjunto[seqAtual].precipitacao;
+}
+
 function getVelocidadeAtual(conjunto){
   var seqAtual = conjunto.length - 1;
   
-  if (conjunto[seqAtual].velocidade > conjunto[seqAtual-1].velocidade){
-    setTendenciaVento('UP')
+  if (conjunto[seqAtual].velocidade === conjunto[seqAtual-1].velocidade){
+    setTendenciaVento('EQ')
   }else{
-    setTendenciaVento('DOWN')
+    if (conjunto[seqAtual].velocidade > conjunto[seqAtual-1].velocidade){
+      setTendenciaVento('UP')
+    }else{
+      setTendenciaVento('DOWN')
+    }
   }
 
   return conjunto[seqAtual].velocidade;
@@ -95,7 +167,7 @@ useEffect(()=>
       },
   })
     .then(res => res.json())
-    //.then(items => items.sort(ordenar))
+    .then(items => items.sort(ordenar))
     .then(res => {
       setTempAtual(getTemperaturaAtual(res));
       setSensacaoAtual(getSensacaoAtual(res));
@@ -103,84 +175,41 @@ useEffect(()=>
       setDirecaoAtual(getDirecaoAtual(res));
       setVelocidadeAtual(getVelocidadeAtual(res));
       setHoraAtual(getHoraAtual(res));
+      setPressaoAtual(getPressaoAtual(res));
+      setCondicaoAtual(getCondicaoAtual(res));
+      setUVAtual(getUVAtual(res));
+      setPrecipitacaoAtual(getPrecipitacaoAtual(res));
   })
       .catch((err) => alert(err))
   }, [])
 
   return (
-    <main>
-      <section className='bg-gray-500 m-10 p-2 rounded-lg text-center text-gray-200'>
-        <p className='text-3xl font-bold'> Tempo atual - Criciúma, SC </p>
-        <p> {horaAtual} </p>
-        
-        <article>
-          <center> 
-          <p className='bg-gray-700 rounded-md pt-1 p-2 w-fit m-2'> Temperatura
-              <p className='flex'>
-                <span className='text-3xl'> 
-                  { tempAtual }°C 
-                </span> 
-                {
-                  tendenciaTemp === 'UP'
-                  ?
-                  <span className='m-1 ml-2'> <img src={require('./up.png')} width={30} alt=""/> </span>
-                  :
-                  <span className='m-1 ml-2'> <img src={require('./down.png')} width={30} alt=""/> </span>
-                }
-              </p>
-            </p>
+    <main className='bg-gray-600'>
+      {/* <div className='grid grid-flow-col'> */}
+        {/* <div> </div> */}
 
-            <p className='bg-gray-700 rounded-md pt-1 p-2 w-fit m-2'> Sensação térmica
-              <p className='flex'>
-                <span className='text-3xl'> 
-                  { sensacaoAtual }°C 
-                </span>
-                
-                {
-                  tendenciaSensacao  === 'UP'
-                  ?
-                  <span className='m-1 ml-2'> <img src={require('./up.png')} width={30} alt=""/> </span>
-                  :
-                  <span className='m-1 ml-2'> <img src={require('./down.png')} width={30} alt=""/> </span>
-                }
-              </p>
-            </p>
+        <section className='bg-gray-500 m-5 p-2 rounded-lg text-center text-gray-200'>
+          <p className='text-3xl font-bold'> Tempo atual - Criciúma, SC </p>
+          <p> {horaAtual} - <b> {condicaoAtual} </b>
+          <br/>
+          (Precipitação: {precipitacaoAtual} mm) </p>
+          
+          <article className='mt-5'>
+            <center> 
+              <div className='flex justify-center'>
+                <Card titulo="Temperatura" valor={tempAtual} unidade="°C" icone={tendenciaTemp}/>
+                <Card titulo="Sensação térmica" valor={sensacaoAtual} unidade="°C" icone={tendenciaSensacao}/>
+              </div>
+              <Card titulo="Umidade relativa" valor={umidadeAtual} unidade="%" icone={tendenciaUmidade}/>
+              <Card titulo="Radiação UV (1-12)" valor={UVAtual} unidade="" icone={tendenciaUV}/>
+              <Card titulo="Vento" segundoValor={velocidadeAtual} segundaUnidade="km/h" icone={tendenciaVento} valor={direcaoAtual} unidade="°"/>
+              <Card titulo="Pressão" icone={tendenciaPressao} valor={pressaoAtual} unidade="hPa"/>
+          </center>
+          </article>
+        </section> 
 
-            <p className='bg-gray-700 rounded-md pt-1 p-2 w-fit m-2'> Umidade relativa
-              <p className='flex'>
-                <span className='text-3xl'> 
-                  { umidadeAtual } %
-                </span>
-                
-                {
-                  tendenciaUmidade  === 'UP'
-                  ?
-                  <span className='m-1 ml-2'> <img src={require('./up.png')} width={30} alt=""/> </span>
-                  :
-                  <span className='m-1 ml-2'> <img src={require('./down.png')} width={30} alt=""/> </span>
-                }
-              </p>
-            </p>
-
-            <p className='bg-gray-700 rounded-md pt-1 p-2 w-fit m-2'> Vento
-              <p className='flex'>
-                <span className='text-3xl'> 
-                  <span className='text-3xl'> { direcaoAtual }°</span> 
-                  <span className='text-3xl'> { velocidadeAtual } km/h</span> 
-                </span>
-                
-                {
-                  tendenciaVento  === 'UP'
-                  ?
-                  <span className='m-1 ml-2'> <img src={require('./up.png')} width={30} alt=""/> </span>
-                  :
-                  <span className='m-1 ml-2'> <img src={require('./down.png')} width={30} alt=""/> </span>
-                }
-              </p>
-            </p>
-         </center>
-        </article>
-      </section> 
+        {/* <div> </div> */}
+      {/* </div>*/}
     </main>
   );
 }

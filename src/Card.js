@@ -1,6 +1,6 @@
-function Card({titulo, valor, unidade, icone, segundoValor, segundaUnidade }){    
+function Card({titulo, valor, unidade, icone, segundoValor, segundaUnidade, eventoClick }){    
     return(
-        <p className='bg-gray-700 rounded-md p-1 w-fit m-1 text-sm pl-2 pr-2'>
+        <p className='bg-gray-700 rounded-md p-1 w-fit m-1 text-sm pl-2 pr-2' onClick={eventoClick}>
             { titulo }
 
             <p className='flex justify-center'>            

@@ -1,6 +1,9 @@
 import './App.css';
 import { useState, useEffect } from 'react';
 import Card from './Card';
+import HistoricoTemp from './HistoricoTemp';
+import HistoricoPressao from './HistoricoPressao';
+import HistoricoUmidade from './HistoricoUmidade';
 
 function App() {
   const [tempAtual, setTempAtual] = useState();
@@ -9,10 +12,13 @@ function App() {
   const [direcaoAtual, setDirecaoAtual] = useState();
   const [velocidadeAtual, setVelocidadeAtual] = useState();
   const [horaAtual, setHoraAtual] = useState();
+  const [dataAtual, setDataAtual] = useState();
   const [pressaoAtual, setPressaoAtual] = useState();
   const [condicaoAtual, setCondicaoAtual] = useState();
   const [UVAtual, setUVAtual] = useState();
   const [precipitacaoAtual, setPrecipitacaoAtual] = useState();
+  const [tela, setTela] = useState(0);
+  const[conjunto, setConjunto] = useState([]);
 
   const [tendenciaTemp, setTendenciaTemp] = useState('UP');
   const [tendenciaSensacao, setTendenciaSensacao] = useState('UP');
@@ -31,13 +37,17 @@ function App() {
     }
 }
 
+function getDataAtual(conjunto){
+  var seqAtual = conjunto.length - 1;
+  var dataFormatada = conjunto[seqAtual].dia + "/" + conjunto[seqAtual].mes + "/" + conjunto[seqAtual].ano
+  
+  return dataFormatada;
+}
+
 function getHoraAtual(conjunto){
   var seqAtual = conjunto.length - 1;
-  var horario = conjunto[seqAtual].hora.substring(11, 16);
-  var hora = horario.substring(0, 2) - 3;
-  var minutos = horario.substring(3, 5);
   
-  return hora + ':' + minutos;
+  return conjunto[seqAtual].hora + ":" + conjunto[seqAtual].minutos
 }
 
 function getCondicaoAtual(conjunto){
@@ -158,6 +168,22 @@ function getVelocidadeAtual(conjunto){
   return conjunto[seqAtual].velocidade;
 }
 
+function historicoTemp(){
+  setTela(1);
+}
+
+function historicoPressao(){
+  setTela(2);
+}
+
+function historicoUmidade(){
+  setTela(3);
+}
+
+function voltar(){
+  setTela(0)
+}
+
 useEffect(()=>
   {
       fetch(`https://intelliseven.com.br/meteo/currentwx`,
@@ -169,12 +195,14 @@ useEffect(()=>
     .then(res => res.json())
     .then(items => items.sort(ordenar))
     .then(res => {
+      setConjunto(res);
       setTempAtual(getTemperaturaAtual(res));
       setSensacaoAtual(getSensacaoAtual(res));
       setUmidadeAtual(getUmidadeAtual(res));
       setDirecaoAtual(getDirecaoAtual(res));
       setVelocidadeAtual(getVelocidadeAtual(res));
       setHoraAtual(getHoraAtual(res));
+      setDataAtual(getDataAtual(res));
       setPressaoAtual(getPressaoAtual(res));
       setCondicaoAtual(getCondicaoAtual(res));
       setUVAtual(getUVAtual(res));
@@ -185,31 +213,42 @@ useEffect(()=>
 
   return (
     <main className='bg-gray-600'>
-      {/* <div className='grid grid-flow-col'> */}
-        {/* <div> </div> */}
-
         <section className='bg-gray-500 m-5 p-2 rounded-lg text-center text-gray-200'>
-          <p className='text-3xl font-bold'> Tempo atual - Criciúma, SC </p>
-          <p> {horaAtual} - <b> {condicaoAtual} </b>
-          <br/>
-          (Precipitação: {precipitacaoAtual} mm) </p>
+          <p className='text-3xl font-bold'> Criciúma, SC </p>
+          <p> {horaAtual} - <b> {condicaoAtual} </b> </p>
           
-          <article className='mt-5'>
-            <center> 
-              <div className='flex justify-center'>
-                <Card titulo="Temperatura" valor={tempAtual} unidade="°C" icone={tendenciaTemp}/>
-                <Card titulo="Sensação térmica" valor={sensacaoAtual} unidade="°C" icone={tendenciaSensacao}/>
-              </div>
-              <Card titulo="Umidade relativa" valor={umidadeAtual} unidade="%" icone={tendenciaUmidade}/>
-              <Card titulo="Radiação UV (1-12)" valor={UVAtual} unidade="" icone={tendenciaUV}/>
-              <Card titulo="Vento" segundoValor={velocidadeAtual} segundaUnidade="km/h" icone={tendenciaVento} valor={direcaoAtual} unidade="°"/>
-              <Card titulo="Pressão" icone={tendenciaPressao} valor={pressaoAtual} unidade="hPa"/>
-          </center>
-          </article>
+          {
+            tela === 0
+            ?          
+            <article className='mt-1'>
+              <center> 
+                (Precipitação: {precipitacaoAtual} mm) 
+                <div className='flex justify-center mt-2'>
+                  <Card titulo="Temperatura" valor={tempAtual} unidade="°C" icone={tendenciaTemp} eventoClick={historicoTemp}/>
+                  <Card titulo="Sensação térmica" valor={sensacaoAtual} unidade="°C" icone={tendenciaSensacao} eventoClick={historicoTemp}/>
+                </div>
+                <Card titulo="Umidade relativa" valor={umidadeAtual} unidade="%" icone={tendenciaUmidade} eventoClick={historicoUmidade}/>
+                <Card titulo="Radiação UV (1-12)" valor={UVAtual} unidade="" icone={tendenciaUV}/>
+                <Card titulo="Vento" segundoValor={velocidadeAtual} segundaUnidade="km/h" icone={tendenciaVento} valor={direcaoAtual} unidade="°"/>
+                <Card titulo="Pressão" icone={tendenciaPressao} valor={pressaoAtual} unidade="hPa" eventoClick={historicoPressao}/>
+            </center>
+            </article>
+            :
+            tela === 1
+            ?
+            <HistoricoTemp data = {dataAtual} conjunto={conjunto} eventoClick={voltar} />
+            :
+            tela === 2
+            ?
+            <HistoricoPressao data = {dataAtual} conjunto={conjunto} eventoClick={voltar} />
+            :
+            tela === 3
+            ?
+            <HistoricoUmidade data = {dataAtual} conjunto={conjunto} eventoClick={voltar} />
+            :
+            <></>
+          }
         </section> 
-
-        {/* <div> </div> */}
-      {/* </div>*/}
     </main>
   );
 }

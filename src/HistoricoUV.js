@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import Voltar from "./Voltar";
-import CardHistorico from './CardHistorico';
 
-function HistoricoPressao({data, conjunto, eventoClick}){    
+function HistoricoUV({data, conjunto, eventoClick}){    
     const [dadosDia, setDadosDia] = useState([])    
     var dataHoje = new Date();
     var dia = dataHoje.getDate().toString(), mes = ((dataHoje.getMonth() + 1)).toString();
@@ -16,7 +15,7 @@ function HistoricoPressao({data, conjunto, eventoClick}){
 
     return(
         <section>
-            Histórico de Pressão atmosférica - {data}
+            Histórico de Radiação UV - {data}
             <center>
                 <article className='w-fit'>
                     <p className='mb-1'> 
@@ -27,7 +26,10 @@ function HistoricoPressao({data, conjunto, eventoClick}){
 
                         dadosDia.map(item => (
                             <>
-                                <CardHistorico hora={item.hora} minutos={item.minutos} valor1={item.pressao}/>
+                                <p className='flex'> 
+                                    <span className='bg-orange-400 rounded-md p-1 m-1 w-3/6 text-sm'> {item.hora}:{item.minutos} </span>
+                                    <span className='bg-gray-700 rounded-md p-1 m-1 w-3/6 text-sm'> {item.uv} </span> 
+                                </p>
                             </>
                         ))                    
                     }
@@ -39,4 +41,4 @@ function HistoricoPressao({data, conjunto, eventoClick}){
     )
 }
 
-export default HistoricoPressao;
+export default HistoricoUV;

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Voltar from "./Voltar";
+import CardHistorico from './CardHistorico';
 
 function HistoricoTemp({data, conjunto, eventoClick}){    
     const [dadosDia, setDadosDia] = useState([])    
@@ -24,14 +25,9 @@ function HistoricoTemp({data, conjunto, eventoClick}){
                         <span className='p-1 m-1 w-2/6 font-bold text-sm'> Sensação </span> 
                     </p>
                     {
-
                         dadosDia.map(item => (
                             <>
-                                <p className='flex'> 
-                                    <span className='bg-orange-400 rounded-md p-1 m-1 w-2/6 text-sm'> {item.hora}:{item.minutos} </span>
-                                    <span className='bg-gray-700 rounded-md p-1 m-1 w-2/6 text-sm'> {item.temperatura} </span> 
-                                    <span className='bg-gray-700 rounded-md p-1 m-1 w-2/6 text-sm'> {item.sensacao} </span> 
-                                </p>
+                                <CardHistorico hora={item.hora} minutos={item.minutos} valor1={item.temperatura} valor2={item.sensacao}/>
                             </>
                         ))                    
                     }

@@ -7,6 +7,8 @@ import HistoricoUmidade from './HistoricoUmidade';
 import HistoricoUV from './HistoricoUV';
 import HistoricoVento from './HistoricoVento';
 import MinMax from './MinMax';
+import { IndiceCalor } from './IndiceCalor.mjs';
+import HistoricoIndiceCalor from './HistoricoIndiceCalor';
 
 function App() {
   const [tempAtual, setTempAtual] = useState();
@@ -22,6 +24,7 @@ function App() {
   const [precipitacaoAtual, setPrecipitacaoAtual] = useState();
   const [tela, setTela] = useState(0);
   const[conjunto, setConjunto] = useState([]);
+  const[indiceCalorAtual, setIndiceCalorAtual] = useState(0)
 
   const [tendenciaTemp, setTendenciaTemp] = useState('UP');
   const [tendenciaSensacao, setTendenciaSensacao] = useState('UP');
@@ -29,6 +32,7 @@ function App() {
   const [tendenciaVento, setTendenciaVento] = useState('UP');
   const [tendenciaPressao, setTendenciaPressao] = useState('UP');
   const [tendenciaUV, setTendenciaUV] = useState('UP');
+  const [tendenciaCalor, setTendenciaCalor] = useState('UP');
 
   function ordenar(a, b) {
     if (a.seq < b.seq ) {
@@ -61,6 +65,25 @@ function getCondicaoAtual(conjunto){
   var condicaoOriginal = conjunto[seqAtual].cobertura;
 
   return condicoes[condicaoOriginal];
+}
+
+function getIndiceCalorAtual(conjunto){
+  var seqAtual = conjunto.length - 1;
+
+  var indiceAtual = IndiceCalor(conjunto[seqAtual].temperatura, conjunto[seqAtual].umidade)
+  var indiceAnterior = IndiceCalor(conjunto[seqAtual-1].temperatura, conjunto[seqAtual-1].umidade)
+
+  if (indiceAtual === indiceAnterior){
+    setTendenciaCalor('EQ')
+  }else{
+    if (indiceAtual > indiceAnterior){
+      setTendenciaCalor('UP')
+    }else{
+      setTendenciaCalor('DOWN')
+    }
+  }
+  
+  return indiceAtual;
 }
 
 function getUVAtual(conjunto){
@@ -191,6 +214,10 @@ function historicoVento(){
   setTela(5);
 }
 
+function historicoIndiceCalor(){
+  setTela(7);
+}
+
 function voltar(){
   setTela(0)
 }
@@ -219,6 +246,7 @@ useEffect(()=>
       setCondicaoAtual(getCondicaoAtual(res));
       setUVAtual(getUVAtual(res));
       setPrecipitacaoAtual(getPrecipitacaoAtual(res));
+      setIndiceCalorAtual(getIndiceCalorAtual(res));
   })
       .catch((err) => alert(err))
   }, [])
@@ -243,6 +271,12 @@ useEffect(()=>
                 <span className='grid place-items-center col-span-2'> <center> <img src={require('./thermometer.png')} width={40} alt=""/> </center> </span>
                 <div className='col-span-7'><Card titulo="Sensação térmica" valor={sensacaoAtual} unidade="°C" icone={tendenciaSensacao} eventoClick={historicoTemp}/></div>
                 <div className='grid place-items-center col-span-3'> <MinMax conjunto={conjunto} parametro="6"/> </div>
+              </p>
+
+              <p className='grid grid-cols-12 gap-1'>
+                <span className='grid place-items-center col-span-2'> <center> <img src={require('./heat.png')} width={40} alt=""/> </center> </span>
+                <div className='col-span-7'><Card titulo="Índice de calor" valor={indiceCalorAtual} unidade="°C" icone={tendenciaCalor} eventoClick={historicoIndiceCalor}/></div>
+                <div className='grid place-items-center col-span-3'> <MinMax conjunto={conjunto} parametro="7"/> </div>
               </p>
 
               <p className='grid grid-cols-12 gap-1'>
@@ -289,6 +323,14 @@ useEffect(()=>
             tela === 5
             ?
             <HistoricoVento data = {dataAtual} conjunto={conjunto} eventoClick={voltar} />
+            :
+            tela === 6
+            ?
+            <HistoricoVento data = {dataAtual} conjunto={conjunto} eventoClick={voltar} />
+            :
+            tela === 7
+            ?
+            <HistoricoIndiceCalor data = {dataAtual} conjunto={conjunto} eventoClick={voltar} />
             :
             <></>
           }

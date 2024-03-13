@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { IndiceCalor } from './IndiceCalor.mjs';
 
 function MinMax({conjunto, parametro}){    
   
@@ -49,9 +50,17 @@ function MinMax({conjunto, parametro}){
                 if((dadosDia[i].velocidade < min) || min === -99999){ min = dadosDia[i].velocidade }
                 if((dadosDia[i].velocidade >= max) || max === 90000){ max = dadosDia[i].velocidade }
               }else{
-                // sensação
-                if((dadosDia[i].sensacao < min) || min === -99999){ min = dadosDia[i].sensacao }
-                if((dadosDia[i].sensacao >= max) || max === 90000){ max = dadosDia[i].sensacao }
+                if(parametro === '7'){
+                  // indice de calor
+                  var indiceAtual = IndiceCalor(dadosDia[i].temperatura, dadosDia[i].umidade)
+
+                  if((indiceAtual < min) || min === -99999){ min = indiceAtual }
+                  if((indiceAtual >= max) || max === 90000){ max = indiceAtual }
+                  }else{
+                    // sensação
+                  if((dadosDia[i].sensacao < min) || min === -99999){ min = dadosDia[i].sensacao }
+                  if((dadosDia[i].sensacao >= max) || max === 90000){ max = dadosDia[i].sensacao }
+                  }
               }
             }
           }

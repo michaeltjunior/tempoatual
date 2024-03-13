@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import Voltar from "./Voltar";
+import CardHistorico from './CardHistorico';
+import { IndiceCalor } from './IndiceCalor.mjs';
 
-function HistoricoUV({data, conjunto, eventoClick}){    
+function HistoricoIndiceCalor({data, conjunto, eventoClick}){    
     const [dadosDia, setDadosDia] = useState([])    
     var dataHoje = new Date();
     var dia = dataHoje.getDate().toString(), mes = ((dataHoje.getMonth() + 1)).toString();
@@ -15,21 +17,19 @@ function HistoricoUV({data, conjunto, eventoClick}){
 
     return(
         <section>
-            Histórico de Radiação UV - {data}
+            Histórico de Índice de calor - {data}
             <center>
                 <article className='w-fit'>
                     <p className='mb-1'> 
                         <span className='p-1 m-1 w-3/6 font-bold text-sm'> Horário </span>
-                        <span className='p-1 m-1 w-3/6 font-bold text-sm'> Radiação </span> 
+                        <span className='p-1 m-1 w-3/6 font-bold text-sm'> Temperatura °C</span> 
+                        <span className='p-1 m-1 w-3/6 font-bold text-sm'> Índice °C</span> 
                     </p>
                     {
 
                         dadosDia.map(item => (
                             <>
-                                <p className='flex'> 
-                                    <span className='bg-orange-400 rounded-md p-1 m-1 w-3/6 text-sm'> {item.hora}:{item.minutos} </span>
-                                    <span className='bg-gray-700 rounded-md p-1 m-1 w-3/6 text-sm'> {item.uv} </span> 
-                                </p>
+                                <CardHistorico hora={item.hora} minutos={item.minutos} valor1={item.temperatura} valor2={IndiceCalor(item.temperatura, item.umidade)} />
                             </>
                         ))                    
                     }
@@ -41,4 +41,4 @@ function HistoricoUV({data, conjunto, eventoClick}){
     )
 }
 
-export default HistoricoUV;
+export default HistoricoIndiceCalor;

@@ -57,9 +57,15 @@ function MinMax({conjunto, parametro}){
                   if((indiceAtual < min) || min === -99999){ min = indiceAtual }
                   if((indiceAtual >= max) || max === 90000){ max = indiceAtual }
                   }else{
-                    // sensação
-                  if((dadosDia[i].sensacao < min) || min === -99999){ min = dadosDia[i].sensacao }
-                  if((dadosDia[i].sensacao >= max) || max === 90000){ max = dadosDia[i].sensacao }
+                    if(parametro === '9'){
+                      // precipitacao
+                      if((dadosDia[i].precipitacao < min) || min === -99999){ min = dadosDia[i].precipitacao }
+                      if((dadosDia[i].precipitacao >= max) || max === 90000){ max = dadosDia[i].precipitacao }
+                          }else{
+                      // sensação
+                      if((dadosDia[i].sensacao < min) || min === -99999){ min = dadosDia[i].sensacao }
+                      if((dadosDia[i].sensacao >= max) || max === 90000){ max = dadosDia[i].sensacao }
+                    }
                   }
               }
             }

@@ -9,10 +9,11 @@ import HistoricoVento from './HistoricoVento';
 import MinMax from './MinMax';
 import { IndiceCalor } from './IndiceCalor.mjs';
 import HistoricoIndiceCalor from './HistoricoIndiceCalor';
+import HistoricoPrecipitacao from './HistoricoPrecipitacao';
 
 function App() {
   const [tempAtual, setTempAtual] = useState();
-  const [sensacaoAtual, setSensacaoAtual] = useState();
+  //const [sensacaoAtual, setSensacaoAtual] = useState();
   const [umidadeAtual, setUmidadeAtual] = useState();
   const [direcaoAtual, setDirecaoAtual] = useState();
   const [velocidadeAtual, setVelocidadeAtual] = useState();
@@ -27,12 +28,13 @@ function App() {
   const[indiceCalorAtual, setIndiceCalorAtual] = useState(0)
 
   const [tendenciaTemp, setTendenciaTemp] = useState('UP');
-  const [tendenciaSensacao, setTendenciaSensacao] = useState('UP');
+  //const [tendenciaSensacao, setTendenciaSensacao] = useState('UP');
   const [tendenciaUmidade, setTendenciaUmidade] = useState('UP');
   const [tendenciaVento, setTendenciaVento] = useState('UP');
   const [tendenciaPressao, setTendenciaPressao] = useState('UP');
   const [tendenciaUV, setTendenciaUV] = useState('UP');
   const [tendenciaCalor, setTendenciaCalor] = useState('UP');
+  const [tendenciaPrecipitacao, setTendenciaPrecipitacao] = useState('UP');
 
   function ordenar(a, b) {
     if (a.seq < b.seq ) {
@@ -134,7 +136,7 @@ function getTemperaturaAtual(conjunto){
   return conjunto[seqAtual].temperatura;
 }
 
-function getSensacaoAtual(conjunto){
+/*function getSensacaoAtual(conjunto){
   var seqAtual = conjunto.length - 1;
   
   if (conjunto[seqAtual].sensacao === conjunto[seqAtual-1].sensacao){
@@ -148,7 +150,7 @@ function getSensacaoAtual(conjunto){
   }
 
   return conjunto[seqAtual].sensacao;
-}
+}*/
 
 function getUmidadeAtual(conjunto){
   var seqAtual = conjunto.length - 1;
@@ -174,6 +176,16 @@ function getDirecaoAtual(conjunto){
 
 function getPrecipitacaoAtual(conjunto){
   var seqAtual = conjunto.length - 1;
+
+  if (conjunto[seqAtual].precipitacao === conjunto[seqAtual-1].precipitacao){
+    setTendenciaPrecipitacao('EQ')
+  }else{
+    if (conjunto[seqAtual].precipitacao > conjunto[seqAtual-1].precipitacao){
+      setTendenciaPrecipitacao('UP')
+    }else{
+      setTendenciaPrecipitacao('DOWN')
+    }
+  }
   
   return conjunto[seqAtual].precipitacao;
 }
@@ -218,6 +230,10 @@ function historicoIndiceCalor(){
   setTela(7);
 }
 
+function historicoPrecipitacao(){
+  setTela(8);
+}
+
 function voltar(){
   setTela(0)
 }
@@ -236,7 +252,7 @@ useEffect(()=>
       setTela(0);
       setConjunto(res);
       setTempAtual(getTemperaturaAtual(res));
-      setSensacaoAtual(getSensacaoAtual(res));
+      //setSensacaoAtual(getSensacaoAtual(res));
       setUmidadeAtual(getUmidadeAtual(res));
       setDirecaoAtual(getDirecaoAtual(res));
       setVelocidadeAtual(getVelocidadeAtual(res));
@@ -256,7 +272,7 @@ useEffect(()=>
         <section className='bg-gray-500 m-5 p-2 rounded-lg text-center text-gray-200'>
           <p className='text-3xl font-bold'> Criciúma, SC </p>
           <p> {horaAtual} - <b> {condicaoAtual} </b> </p>
-          <p> (Precipitação: {precipitacaoAtual} mm) </p>
+          {/*<p> (Precipitação: {precipitacaoAtual} mm) </p>*/}
           {
             tela === 0
             ?                      
@@ -267,16 +283,22 @@ useEffect(()=>
                 <div className='grid place-items-center col-span-3'> <MinMax conjunto={conjunto} parametro="1"/> </div>
               </p>
 
-              <p className='grid grid-cols-12 gap-1'>
+              {/*<p className='grid grid-cols-12 gap-1'>
                 <span className='grid place-items-center col-span-2'> <center> <img src={require('./thermometer.png')} width={40} alt=""/> </center> </span>
                 <div className='col-span-7'><Card titulo="Sensação térmica" valor={sensacaoAtual} unidade="°C" icone={tendenciaSensacao} eventoClick={historicoTemp}/></div>
                 <div className='grid place-items-center col-span-3'> <MinMax conjunto={conjunto} parametro="6"/> </div>
-              </p>
+              </p>*/}
 
               <p className='grid grid-cols-12 gap-1'>
                 <span className='grid place-items-center col-span-2'> <center> <img src={require('./heat.png')} width={40} alt=""/> </center> </span>
                 <div className='col-span-7'><Card titulo="Índice de calor" valor={indiceCalorAtual} unidade="°C" icone={tendenciaCalor} eventoClick={historicoIndiceCalor}/></div>
                 <div className='grid place-items-center col-span-3'> <MinMax conjunto={conjunto} parametro="7"/> </div>
+              </p>
+
+              <p className='grid grid-cols-12 gap-1'>
+                <span className='grid place-items-center col-span-2'> <center> <img src={require('./rain.png')} width={40} alt=""/> </center> </span>
+                <div className='col-span-7'><Card titulo="Precipitação" valor={precipitacaoAtual} unidade="mm" icone={tendenciaPrecipitacao} eventoClick={historicoPrecipitacao}/></div>
+                <div className='grid place-items-center col-span-3'> <MinMax conjunto={conjunto} parametro="9"/> </div>
               </p>
 
               <p className='grid grid-cols-12 gap-1'>
@@ -331,6 +353,10 @@ useEffect(()=>
             tela === 7
             ?
             <HistoricoIndiceCalor data = {dataAtual} conjunto={conjunto} eventoClick={voltar} />
+            :
+            tela === 8
+            ?
+            <HistoricoPrecipitacao data = {dataAtual} conjunto={conjunto} eventoClick={voltar} />
             :
             <></>
           }

@@ -13,7 +13,6 @@ import HistoricoPrecipitacao from './HistoricoPrecipitacao';
 
 function App() {
   const [tempAtual, setTempAtual] = useState();
-  //const [sensacaoAtual, setSensacaoAtual] = useState();
   const [umidadeAtual, setUmidadeAtual] = useState();
   const [direcaoAtual, setDirecaoAtual] = useState();
   const [velocidadeAtual, setVelocidadeAtual] = useState();
@@ -28,7 +27,6 @@ function App() {
   const[indiceCalorAtual, setIndiceCalorAtual] = useState(0)
 
   const [tendenciaTemp, setTendenciaTemp] = useState('UP');
-  //const [tendenciaSensacao, setTendenciaSensacao] = useState('UP');
   const [tendenciaUmidade, setTendenciaUmidade] = useState('UP');
   const [tendenciaVento, setTendenciaVento] = useState('UP');
   const [tendenciaPressao, setTendenciaPressao] = useState('UP');
@@ -136,22 +134,6 @@ function getTemperaturaAtual(conjunto){
   return conjunto[seqAtual].temperatura;
 }
 
-/*function getSensacaoAtual(conjunto){
-  var seqAtual = conjunto.length - 1;
-  
-  if (conjunto[seqAtual].sensacao === conjunto[seqAtual-1].sensacao){
-    setTendenciaSensacao('EQ')
-  }else{
-    if (conjunto[seqAtual].sensacao > conjunto[seqAtual-1].sensacao){
-      setTendenciaSensacao('UP')
-    }else{
-      setTendenciaSensacao('DOWN')
-    }
-  }
-
-  return conjunto[seqAtual].sensacao;
-}*/
-
 function getUmidadeAtual(conjunto){
   var seqAtual = conjunto.length - 1;
   
@@ -252,7 +234,6 @@ useEffect(()=>
       setTela(0);
       setConjunto(res);
       setTempAtual(getTemperaturaAtual(res));
-      //setSensacaoAtual(getSensacaoAtual(res));
       setUmidadeAtual(getUmidadeAtual(res));
       setDirecaoAtual(getDirecaoAtual(res));
       setVelocidadeAtual(getVelocidadeAtual(res));
@@ -272,56 +253,49 @@ useEffect(()=>
         <section className='bg-gray-500 m-5 p-2 rounded-lg text-center text-gray-200'>
           <p className='text-3xl font-bold'> Criciúma, SC </p>
           <p> {horaAtual} - <b> {condicaoAtual} </b> </p>
-          {/*<p> (Precipitação: {precipitacaoAtual} mm) </p>*/}
           {
             tela === 0
             ?                      
             <article className='mt-1'>
-              <p className='grid grid-cols-12 gap-1'>
-                <span className='grid place-items-center col-span-2'> <center> <img src={require('./thermometer.png')} width={40} alt=""/> </center> </span>
-                <div className='col-span-7'><Card titulo="Temperatura" valor={tempAtual} unidade="°C" icone={tendenciaTemp} eventoClick={historicoTemp}/></div>
+              <p className='rounded-md grid grid-cols-12 gap-1 bg-gray-700 p-1 pl-2 m-1'>
+                <span className='grid place-items-center col-span-1'> <center> <img src={require('./thermometer.png')} width={40} alt=""/> </center> </span>
+                <div className='col-span-8'><Card titulo="Temperatura" valor={tempAtual} unidade="°C" icone={tendenciaTemp} eventoClick={historicoTemp}/></div>
                 <div className='grid place-items-center col-span-3'> <MinMax conjunto={conjunto} parametro="1"/> </div>
               </p>
 
-              {/*<p className='grid grid-cols-12 gap-1'>
-                <span className='grid place-items-center col-span-2'> <center> <img src={require('./thermometer.png')} width={40} alt=""/> </center> </span>
-                <div className='col-span-7'><Card titulo="Sensação térmica" valor={sensacaoAtual} unidade="°C" icone={tendenciaSensacao} eventoClick={historicoTemp}/></div>
-                <div className='grid place-items-center col-span-3'> <MinMax conjunto={conjunto} parametro="6"/> </div>
-              </p>*/}
-
-              <p className='grid grid-cols-12 gap-1'>
-                <span className='grid place-items-center col-span-2'> <center> <img src={require('./heat.png')} width={40} alt=""/> </center> </span>
-                <div className='col-span-7'><Card titulo="Índice de calor" valor={indiceCalorAtual} unidade="°C" icone={tendenciaCalor} eventoClick={historicoIndiceCalor}/></div>
+              <p className='rounded-md grid grid-cols-12 gap-1 bg-gray-700 p-1 pl-2 m-1'>
+                <span className='grid place-items-center col-span-1'> <center> <img src={require('./heat.png')} width={40} alt=""/> </center> </span>
+                <div className='col-span-8'><Card titulo="Índice de calor" valor={indiceCalorAtual} unidade="°C" icone={tendenciaCalor} eventoClick={historicoIndiceCalor}/></div>
                 <div className='grid place-items-center col-span-3'> <MinMax conjunto={conjunto} parametro="7"/> </div>
               </p>
 
-              <p className='grid grid-cols-12 gap-1'>
-                <span className='grid place-items-center col-span-2'> <center> <img src={require('./rain.png')} width={40} alt=""/> </center> </span>
-                <div className='col-span-7'><Card titulo="Precipitação" valor={precipitacaoAtual} unidade="mm" icone={tendenciaPrecipitacao} eventoClick={historicoPrecipitacao}/></div>
+              <p className='rounded-md grid grid-cols-12 gap-1 bg-gray-700 p-1 pl-2 m-1'>
+                <span className='grid place-items-center col-span-1'> <center> <img src={require('./rain.png')} width={40} alt=""/> </center> </span>
+                <div className='col-span-8'><Card titulo="Precipitação" valor={precipitacaoAtual} unidade="mm" icone={tendenciaPrecipitacao} eventoClick={historicoPrecipitacao}/></div>
                 <div className='grid place-items-center col-span-3'> <MinMax conjunto={conjunto} parametro="9"/> </div>
               </p>
 
-              <p className='grid grid-cols-12 gap-1'>
-                <span className='grid place-items-center col-span-2'> <center> <img src={require('./humidity.png')} width={40} alt=""/> </center> </span>
-                <div className='col-span-7'><Card titulo="Umidade relativa" valor={umidadeAtual} unidade="%" icone={tendenciaUmidade} eventoClick={historicoUmidade}/></div>
+              <p className='rounded-md grid grid-cols-12 gap-1 bg-gray-700 p-1 pl-2 m-1'>
+                <span className='grid place-items-center col-span-1'> <center> <img src={require('./humidity.png')} width={40} alt=""/> </center> </span>
+                <div className='col-span-8'><Card titulo="Umidade relativa" valor={umidadeAtual} unidade="%" icone={tendenciaUmidade} eventoClick={historicoUmidade}/></div>
                 <div className='grid place-items-center col-span-3'> <MinMax conjunto={conjunto} parametro="3"/> </div>
               </p>
 
-              <p className='grid grid-cols-12 gap-1'>
-                <span className='grid place-items-center col-span-2'> <center> <img src={require('./ultra-violet.png')} width={40} alt=""/> </center> </span>
-                <div className='col-span-7'><Card titulo="Radiação UV (1-12)" valor={UVAtual} unidade="" icone={tendenciaUV} eventoClick={historicoUV}/></div>
+              <p className='rounded-md grid grid-cols-12 gap-1 bg-gray-700 p-1 pl-2 m-1'>
+                <span className='grid place-items-center col-span-1'> <center> <img src={require('./ultra-violet.png')} width={40} alt=""/> </center> </span>
+                <div className='col-span-8'><Card titulo="Radiação UV (1-12)" valor={UVAtual} unidade="" icone={tendenciaUV} eventoClick={historicoUV}/></div>
                 <div className='grid place-items-center col-span-3'> <MinMax conjunto={conjunto} parametro="4"/> </div>
               </p>
 
-              <p className='grid grid-cols-12 gap-1'>
-                <span className='grid place-items-center col-span-2'> <center> <img src={require('./windy.png')} width={40} alt=""/> </center> </span>
-                <div className='col-span-7'><Card titulo="Vento" segundoValor={velocidadeAtual} segundaUnidade="km/h" icone={tendenciaVento} valor={direcaoAtual} unidade="°" eventoClick={historicoVento}/></div>
+              <p className='rounded-md grid grid-cols-12 gap-1 bg-gray-700 p-1 pl-2 m-1'>
+                <span className='grid place-items-center col-span-1'> <center> <img src={require('./windy.png')} width={40} alt=""/> </center> </span>
+                <div className='col-span-8'><Card titulo="Vento" segundoValor={velocidadeAtual} segundaUnidade="km/h" icone={tendenciaVento} valor={direcaoAtual} unidade="°" eventoClick={historicoVento}/></div>
                 <div className='grid place-items-center col-span-3'> <MinMax conjunto={conjunto} parametro="5"/> </div>
               </p>
 
-              <p className='grid grid-cols-12 gap-1'>
-                <span className='grid place-items-center col-span-2'> <center> <img src={require('./barometer-.png')} width={40} alt=""/> </center> </span>
-                <div className='col-span-7'><Card titulo="Pressão" icone={tendenciaPressao} valor={pressaoAtual} unidade="hPa" eventoClick={historicoPressao}/></div>
+              <p className='rounded-md grid grid-cols-12 gap-1 bg-gray-700 p-1 pl-2 m-1'>
+                <span className='grid place-items-center col-span-1'> <center> <img src={require('./barometer-.png')} width={40} alt=""/> </center> </span>
+                <div className='col-span-8'><Card titulo="Pressão" icone={tendenciaPressao} valor={pressaoAtual} unidade="hPa" eventoClick={historicoPressao}/></div>
                 <div className='grid place-items-center col-span-3'> <MinMax conjunto={conjunto} parametro="2"/> </div>
               </p>
             </article>

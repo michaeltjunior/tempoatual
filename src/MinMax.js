@@ -24,7 +24,7 @@ function MinMax({conjunto, parametro}){
     for (i = 0; i < dadosDia.length; i++){
       if(parametro === '1'){
         // temperatura  
-        if((dadosDia[i].temperatura < min) || min === 90000){ min = dadosDia[i].temperatura }
+        if((dadosDia[i].temperatura < min && parseFloat(dadosDia[i].temperatura) !== -17.78) || min === 90000){ min = dadosDia[i].temperatura }
         if((dadosDia[i].temperatura >= max) || max === -99999){ max = dadosDia[i].temperatura }
       }else{
         if(parametro === '2'){
@@ -76,10 +76,9 @@ function MinMax({conjunto, parametro}){
   }, [conjunto, parametro])
 
   return(
-    <div className='bg-gray-700 rounded-md p-1 m-1 text-sm pl-2 pr-2 w-full'>
+    <div className='bg-gray-700 rounded-md text-sm mb-1 pl-1 pr-1 w-full'>
       <div className='text-red-400 p-1'> {maximo} </div>
-      <div></div>
-      <div className='text-blue-400 p-1'> {minimo} </div>
+      <div className='text-blue-400 p-1 text-sm'> {minimo} </div>
     </div>
     )
   }

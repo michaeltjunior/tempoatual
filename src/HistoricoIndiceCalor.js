@@ -12,7 +12,8 @@ function HistoricoIndiceCalor({data, conjunto, eventoClick}){
     useEffect(()=>
     {
         var dadosFiltrados = conjunto.filter((dado) => dado.dia + "/" + dado.mes + "/" + dado.ano === hoje)
-        setDadosDia(dadosFiltrados)
+        var dadosFiltrados2 = dadosFiltrados.filter((dado) => parseFloat(dado.temperatura) !== -17.78)
+        setDadosDia(dadosFiltrados2)
     }, [data, conjunto, hoje])
 
     return(

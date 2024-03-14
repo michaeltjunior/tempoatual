@@ -28,7 +28,7 @@ function HistoricoVento({data, conjunto, eventoClick}){
                         dadosDia.map(item => (
                             <>
                                 <p className='flex'> 
-                                    <span className='bg-orange-400 rounded-md p-1 m-1 w-2/6 text-sm'> {item.hora}:{item.minutos} </span>
+                                    <span className='bg-gray-600 rounded-md p-1 m-1 w-2/6 text-sm'> {item.hora}:{item.minutos} </span>
                                     <span className='bg-gray-700 rounded-md p-1 m-1 w-2/6 text-sm'> {item.direcao}° </span> 
                                     <span className='bg-gray-700 rounded-md p-1 m-1 w-2/6 text-sm'> {item.velocidade}km/h </span> 
                                 </p>

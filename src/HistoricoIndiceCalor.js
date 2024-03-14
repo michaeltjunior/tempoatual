@@ -30,10 +30,19 @@ function HistoricoIndiceCalor({data, conjunto, eventoClick}){
 
                         dadosDia.map(item => (
                             <>
-                                <CardHistorico hora={item.hora} minutos={item.minutos} valor1={item.temperatura} valor2={IndiceCalor(item.temperatura, item.umidade)} />
+                                <CardHistorico  hora={item.hora} minutos={item.minutos} valor1={item.temperatura} 
+                                                valor2={IndiceCalor(item.temperatura, item.umidade)} 
+                                                indice={IndiceCalor(item.temperatura, item.umidade)}
+                                                indiceCalor="S"/>
                             </>
                         ))                    
                     }
+                </article>
+                <article className='grid mt-3'>
+                    <p className='bg-amber-500 rounded-xl m-1'> 27°C a 31°C - Cuidado </p>
+                    <p className='bg-orange-700 rounded-xl m-1'> 32°C a 40°C - Cuidado extremo</p>
+                    <p className='bg-red-700 rounded-xl m-1'> 41°C a 53°C - PERIGO </p>
+                    <p className='bg-rose-800 rounded-xl m-1'> acima de 54°C - PERIGO EXTREMO </p>
                 </article>
             </center>
 

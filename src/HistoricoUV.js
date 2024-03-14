@@ -27,7 +27,7 @@ function HistoricoUV({data, conjunto, eventoClick}){
                         dadosDia.map(item => (
                             <>
                                 <p className='flex'> 
-                                    <span className='bg-orange-400 rounded-md p-1 m-1 w-3/6 text-sm'> {item.hora}:{item.minutos} </span>
+                                    <span className='bg-gray-600 rounded-md p-1 m-1 w-3/6 text-sm'> {item.hora}:{item.minutos} </span>
                                     <span className='bg-gray-700 rounded-md p-1 m-1 w-3/6 text-sm'> {item.uv} </span> 
                                 </p>
                             </>

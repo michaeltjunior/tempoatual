@@ -1,342 +1,128 @@
-import './App.css';
 import { useState, useEffect } from 'react';
-import Card from './Card';
-import HistoricoTemp from './HistoricoTemp';
-import HistoricoPressao from './HistoricoPressao';
-import HistoricoUmidade from './HistoricoUmidade';
-import HistoricoUV from './HistoricoUV';
-import HistoricoVento from './HistoricoVento';
-import MinMax from './MinMax';
-import { IndiceCalor } from './IndiceCalor.mjs';
-import HistoricoIndiceCalor from './HistoricoIndiceCalor';
-import HistoricoPrecipitacao from './HistoricoPrecipitacao';
+import styles from './App.module.css'
 
-function App() {
-  const [tempAtual, setTempAtual] = useState();
-  const [umidadeAtual, setUmidadeAtual] = useState();
-  const [direcaoAtual, setDirecaoAtual] = useState();
-  const [velocidadeAtual, setVelocidadeAtual] = useState();
-  const [horaAtual, setHoraAtual] = useState();
-  const [dataAtual, setDataAtual] = useState();
-  const [pressaoAtual, setPressaoAtual] = useState();
-  const [condicaoAtual, setCondicaoAtual] = useState();
-  const [UVAtual, setUVAtual] = useState();
-  const [precipitacaoAtual, setPrecipitacaoAtual] = useState();
-  const [tela, setTela] = useState(0);
-  const[conjunto, setConjunto] = useState([]);
-  const[indiceCalorAtual, setIndiceCalorAtual] = useState(0)
+function App(){
+    /*const [detalhes, setDetalhes] = useState([])*/
 
-  const [tendenciaTemp, setTendenciaTemp] = useState('UP');
-  const [tendenciaUmidade, setTendenciaUmidade] = useState('UP');
-  const [tendenciaVento, setTendenciaVento] = useState('UP');
-  const [tendenciaPressao, setTendenciaPressao] = useState('UP');
-  const [tendenciaUV, setTendenciaUV] = useState('UP');
-  const [tendenciaCalor, setTendenciaCalor] = useState('UP');
-  const [tendenciaPrecipitacao, setTendenciaPrecipitacao] = useState('UP');
+    /* variaveis de testes, para evitar muitos acessos à API */
+    const [cidade, setcidade] = useState('')
+    const [regiao, setregiao] = useState('')
+    const [pais, setpais] = useState('')
+    const [condicao, setcondicao] = useState('')
+    const [temp, settemp] = useState('')
+    const [orvalho, setorvalho] = useState('')
+    const [sensacao, setsensacao] = useState('')
+    const [pressao, setpressao] = useState('')
+    const [umidade, setumidade] = useState('')
+    const [direcao, setdirecao] = useState('')
+    const [intensidade, setintensidade] = useState('')
+    const [graus, setgraus] = useState('')
+    /*const [cobertura, setcobertura] = useState('')*/
+    const [precipitacao, setprecipitacao] = useState('')
+    const [visibilidade, setvisibilidade] = useState('')
+    const [uv, setuv] = useState('')
+    const [icone, seticone] = useState('')
 
-  function ordenar(a, b) {
-    if (a.seq < b.seq ) {
-      return -1;
-    } else if (a.seq > b.seq ) {
-      return 1;
-    } else {
-       return 0;
+    useEffect(()=>
+        {
+            fetch('http://api.weatherapi.com/v1/current.json?key=eedebbd2289747d7b40125129242407&q=Criciuma&aqi=no',
+            {
+                method: 'GET',
+                mode: 'cors',
+                headers: {'Access-Control-Allow-Origin':'*'}
+        })
+            .then(res => res.json())
+            .then(res =>{setData(res)})
+            .catch((err) => alert(err))
+        }, [])
+
+    function setData(res){
+        setcidade(res.location.name)
+        setregiao(res.location.region)
+        setpais(res.location.country)
+        setcondicao(res.current.condition.text)
+        settemp(res.current.temp_c)
+        setorvalho(res.current.dewpoint_c)
+        setsensacao(res.current.feelslike_c)
+        setpressao(res.current.pressure_mb)
+        setumidade(res.current.humidity)
+        setdirecao(res.current.wind_dir)
+        setintensidade(res.current.wind_kph)
+        setgraus(res.current.wind_degree)
+        /*setcobertura(res.current.cloud)*/
+        setprecipitacao(res.current.precip_mm)
+        setvisibilidade(res.current.vis_km)
+        setuv(res.current.uv)
+        seticone('http:'+res.current.condition.icon)
     }
+
+    return(
+        <div className={styles.tela}>
+            <link href='https://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'></link>
+
+            <table className={styles.tabela}>
+                <tr> <td colspan="3"> <div className={`${styles.fonte200} ${styles.fonteBranco}`}> {cidade}, {regiao}, {pais} </div> </td></tr>
+
+                <tr>
+                    <td>
+                        <table> 
+                            <tr><td colspan="2"> <p>Temperatura</p> </td></tr>
+                            <tr> <td colspan="2"> <div className={`${styles.fonte400} ${styles.fonteAmarelo}`}> {temp}°C </div> </td></tr>
+                            <tr> <td> <p>Ponto de orvalho</p> </td><td> <div className={`${styles.fonte200} ${styles.fonteAzul}`}>  {orvalho}°C </div> </td></tr>
+                            <tr> <td> <p>Sensação térmica</p></td><td> <div className={`${styles.fonte200} ${styles.fonteAmarelo}`}> {sensacao}°C </div> </td></tr>
+                        </table>
+                    </td>
+                    <td> 
+                        <table>
+                            <tr>
+                                <td> <div className={`${styles.fonte400} ${styles.fonteBranco}`}> {condicao} </div> </td>
+                            </tr>
+                            <tr>
+                                <td> <p>Pressão</p> </td>
+                            </tr>
+                            <tr>
+                                <td> <div className={`${styles.fonte200} ${styles.fonteAmarelo}`}> {pressao}hPa </div> </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table> 
+                            <tr> <td> <p>Vento</p></td></tr>
+                            <tr> <td> <div className={`${styles.fonte400} ${styles.fonteBranco}`}> {direcao}</div> </td></tr>
+                            <tr> <td> <div className={`${styles.fonte200} ${styles.fonteBranco}`}> {graus}º </div> </td></tr>
+                            <tr> <td> <div className={`${styles.fonte200} ${styles.fonteBranco}`}> {intensidade} km/h</div> </td></tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <table> 
+                            <tr> <td> <p>Umidade relativa</p> </td></tr>
+                            <tr><td> <div className={`${styles.fonte400} ${styles.fonteAzul}`}> {umidade} %</div> </td></tr>
+                            <tr> <td> <p>Precipitação</p> </td></tr>
+                            <tr> <td> <div className={`${styles.fonte400} ${styles.fonteAzul}`}> {precipitacao} mm</div> </td></tr>
+                        </table>
+                    </td>
+                    <td>
+                        <center> <img src={icone} alt=""/> </center>
+                    </td>
+                    <td> 
+                        <table>
+                            <tr> <td> <p>Visibildade</p> </td></tr>
+                            <tr>
+                                <td> <div className={`${styles.fonte400} ${styles.fonteAzul}`}> {visibilidade} km</div> </td>
+                            </tr>
+                            <tr> <td> <p>Radiação UV</p> </td></tr>
+                            <tr>
+                                <td> <div className={`${styles.fonte400} ${styles.fonteAzul}`}> {uv} </div> </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    )
 }
 
-function getDataAtual(conjunto){
-  var seqAtual = conjunto.length - 1;
-  var dataFormatada = conjunto[seqAtual].dia + "/" + conjunto[seqAtual].mes + "/" + conjunto[seqAtual].ano
-  
-  return dataFormatada;
-}
-
-function getHoraAtual(conjunto){
-  var seqAtual = conjunto.length - 1;
-  
-  return conjunto[seqAtual].hora + ":" + conjunto[seqAtual].minutos
-}
-
-function getCondicaoAtual(conjunto){
-  var condicoes = {'Showers in the Vicinity': 'Chuva ao redor', 'Heavy Rain': 'Chuva forte', Rain: 'Chuva', Cloudy: 'Nublado', 
-                  Fair: 'Céu claro', 'Partly Cloudy': 'Parcialmente nublado', 'Light Rain': 'Chuva fraca', 'Rain Shower': 'Chuva forte', 
-                  Sunny: 'Ensolarado', 'Mostly Cloudy': 'Encoberto'};
-  var seqAtual = conjunto.length - 1;
-  var condicaoOriginal = conjunto[seqAtual].cobertura;
-
-  return condicoes[condicaoOriginal];
-}
-
-function getIndiceCalorAtual(conjunto){
-  var seqAtual = conjunto.length - 1;
-
-  var indiceAtual = IndiceCalor(conjunto[seqAtual].temperatura, conjunto[seqAtual].umidade)
-  var indiceAnterior = IndiceCalor(conjunto[seqAtual-1].temperatura, conjunto[seqAtual-1].umidade)
-
-  if (indiceAtual === indiceAnterior){
-    setTendenciaCalor('EQ')
-  }else{
-    if (indiceAtual > indiceAnterior){
-      setTendenciaCalor('UP')
-    }else{
-      setTendenciaCalor('DOWN')
-    }
-  }
-  
-  return indiceAtual;
-}
-
-function getUVAtual(conjunto){
-  var seqAtual = conjunto.length - 1;
-
-  if (conjunto[seqAtual].uv === conjunto[seqAtual-1].uv){
-    setTendenciaUV('EQ')
-  }else{
-    if (conjunto[seqAtual].uv > conjunto[seqAtual-1].uv){
-      setTendenciaUV('UP')
-    }else{
-      setTendenciaUV('DOWN')
-    }
-  }
-  
-  return conjunto[seqAtual].uv;
-}
-
-function getPressaoAtual(conjunto){
-  var seqAtual = conjunto.length - 1;
-
-if (conjunto[seqAtual].pressao === conjunto[seqAtual-1].pressao){
-  setTendenciaPressao('EQ')
-}else{
-  if (conjunto[seqAtual].pressao > conjunto[seqAtual-1].pressao){
-    setTendenciaPressao('UP')
-  }else{
-    setTendenciaPressao('DOWN')
-  }
-}
-  
-  return conjunto[seqAtual].pressao;
-}
-
-function getTemperaturaAtual(conjunto){
-  var seqAtual = conjunto.length - 1;
-
-  if (conjunto[seqAtual].temperatura === conjunto[seqAtual-1].temperatura){
-    setTendenciaTemp('EQ')
-  }else{
-    if (conjunto[seqAtual].temperatura > conjunto[seqAtual-1].temperatura){
-      setTendenciaTemp('UP')
-    }else{
-      setTendenciaTemp('DOWN')
-    }
-  }
-  
-  return conjunto[seqAtual].temperatura;
-}
-
-function getUmidadeAtual(conjunto){
-  var seqAtual = conjunto.length - 1;
-  
-  if (conjunto[seqAtual].umidade === conjunto[seqAtual-1].umidade){
-    setTendenciaUmidade('EQ')
-  }else{
-    if (conjunto[seqAtual].umidade > conjunto[seqAtual-1].umidade){
-      setTendenciaUmidade('UP')
-    }else{
-      setTendenciaUmidade('DOWN')
-    }
-  }
-
-  return conjunto[seqAtual].umidade;
-}
-
-function getDirecaoAtual(conjunto){
-  var seqAtual = conjunto.length - 1;
-  
-  return conjunto[seqAtual].direcao;
-}
-
-function getPrecipitacaoAtual(conjunto){
-  var seqAtual = conjunto.length - 1;
-
-  if (conjunto[seqAtual].precipitacao === conjunto[seqAtual-1].precipitacao){
-    setTendenciaPrecipitacao('EQ')
-  }else{
-    if (conjunto[seqAtual].precipitacao > conjunto[seqAtual-1].precipitacao){
-      setTendenciaPrecipitacao('UP')
-    }else{
-      setTendenciaPrecipitacao('DOWN')
-    }
-  }
-  
-  return conjunto[seqAtual].precipitacao;
-}
-
-function getVelocidadeAtual(conjunto){
-  var seqAtual = conjunto.length - 1;
-  
-  if (conjunto[seqAtual].velocidade === conjunto[seqAtual-1].velocidade){
-    setTendenciaVento('EQ')
-  }else{
-    if (conjunto[seqAtual].velocidade > conjunto[seqAtual-1].velocidade){
-      setTendenciaVento('UP')
-    }else{
-      setTendenciaVento('DOWN')
-    }
-  }
-
-  return conjunto[seqAtual].velocidade;
-}
-
-function historicoTemp(){
-  setTela(1);
-}
-
-function historicoPressao(){
-  setTela(2);
-}
-
-function historicoUmidade(){
-  setTela(3);
-}
-
-function historicoUV(){
-  setTela(4);
-}
-
-function historicoVento(){
-  setTela(5);
-}
-
-function historicoIndiceCalor(){
-  setTela(7);
-}
-
-function historicoPrecipitacao(){
-  setTela(8);
-}
-
-function voltar(){
-  setTela(0)
-}
-
-useEffect(()=>
-  {
-      fetch(`https://intelliseven.com.br/meteo/currentwx`,
-      {
-          method: 'GET',
-          headers: {'Content-type': 'Application/json',
-      },
-  })
-    .then(res => res.json())
-    .then(items => items.sort(ordenar))
-    .then(res => {
-      setTela(0);
-      setConjunto(res);
-      setTempAtual(getTemperaturaAtual(res));
-      setUmidadeAtual(getUmidadeAtual(res));
-      setDirecaoAtual(getDirecaoAtual(res));
-      setVelocidadeAtual(getVelocidadeAtual(res));
-      setHoraAtual(getHoraAtual(res));
-      setDataAtual(getDataAtual(res));
-      setPressaoAtual(getPressaoAtual(res));
-      setCondicaoAtual(getCondicaoAtual(res));
-      setUVAtual(getUVAtual(res));
-      setPrecipitacaoAtual(getPrecipitacaoAtual(res));
-      setIndiceCalorAtual(getIndiceCalorAtual(res));
-  })
-      .catch((err) => alert(err))
-  }, [])
-
-  return (
-    <main className='bg-gray-600'>
-        <section className='bg-gray-500 m-5 p-2 rounded-lg text-center text-gray-200'>
-          <p className='text-3xl font-bold'> Criciúma, SC </p>
-          <p> {horaAtual} - <b> {condicaoAtual} </b> </p>
-          {
-            tela === 0
-            ?                      
-            <article className='mt-1'>
-              <p className='rounded-md grid grid-cols-12 gap-1 bg-gray-700 p-1 pl-2 m-1'>
-                <span className='grid place-items-center col-span-1'> <center> <img src={require('./thermometer.png')} width={40} alt=""/> </center> </span>
-                <div className='col-span-8'><Card titulo="Temperatura" valor={tempAtual} unidade="°C" icone={tendenciaTemp} eventoClick={historicoTemp}/></div>
-                <div className='grid place-items-center col-span-3'> <MinMax conjunto={conjunto} parametro="1"/> </div>
-              </p>
-
-              <p className='rounded-md grid grid-cols-12 gap-1 bg-gray-700 p-1 pl-2 m-1'>
-                <span className='grid place-items-center col-span-1'> <center> <img src={require('./heat.png')} width={40} alt=""/> </center> </span>
-                <div className='col-span-8'><Card titulo="Índice de calor" valor={indiceCalorAtual} unidade="°C" icone={tendenciaCalor} eventoClick={historicoIndiceCalor}/></div>
-                <div className='grid place-items-center col-span-3'> <MinMax conjunto={conjunto} parametro="7"/> </div>
-              </p>
-
-              <p className='rounded-md grid grid-cols-12 gap-1 bg-gray-700 p-1 pl-2 m-1'>
-                <span className='grid place-items-center col-span-1'> <center> <img src={require('./rain.png')} width={40} alt=""/> </center> </span>
-                <div className='col-span-8'><Card titulo="Precipitação" valor={precipitacaoAtual} unidade="mm" icone={tendenciaPrecipitacao} eventoClick={historicoPrecipitacao}/></div>
-                <div className='grid place-items-center col-span-3'> <MinMax conjunto={conjunto} parametro="9"/> </div>
-              </p>
-
-              <p className='rounded-md grid grid-cols-12 gap-1 bg-gray-700 p-1 pl-2 m-1'>
-                <span className='grid place-items-center col-span-1'> <center> <img src={require('./humidity.png')} width={40} alt=""/> </center> </span>
-                <div className='col-span-8'><Card titulo="Umidade relativa" valor={umidadeAtual} unidade="%" icone={tendenciaUmidade} eventoClick={historicoUmidade}/></div>
-                <div className='grid place-items-center col-span-3'> <MinMax conjunto={conjunto} parametro="3"/> </div>
-              </p>
-
-              <p className='rounded-md grid grid-cols-12 gap-1 bg-gray-700 p-1 pl-2 m-1'>
-                <span className='grid place-items-center col-span-1'> <center> <img src={require('./ultra-violet.png')} width={40} alt=""/> </center> </span>
-                <div className='col-span-8'><Card titulo="Radiação UV (1-12)" valor={UVAtual} unidade="" icone={tendenciaUV} eventoClick={historicoUV}/></div>
-                <div className='grid place-items-center col-span-3'> <MinMax conjunto={conjunto} parametro="4"/> </div>
-              </p>
-
-              <p className='rounded-md grid grid-cols-12 gap-1 bg-gray-700 p-1 pl-2 m-1'>
-                <span className='grid place-items-center col-span-1'> <center> <img src={require('./windy.png')} width={40} alt=""/> </center> </span>
-                <div className='col-span-8'><Card titulo="Vento" segundoValor={velocidadeAtual} segundaUnidade="km/h" icone={tendenciaVento} valor={direcaoAtual} unidade="°" eventoClick={historicoVento}/></div>
-                <div className='grid place-items-center col-span-3'> <MinMax conjunto={conjunto} parametro="5"/> </div>
-              </p>
-
-              <p className='rounded-md grid grid-cols-12 gap-1 bg-gray-700 p-1 pl-2 m-1'>
-                <span className='grid place-items-center col-span-1'> <center> <img src={require('./barometer-.png')} width={40} alt=""/> </center> </span>
-                <div className='col-span-8'><Card titulo="Pressão" icone={tendenciaPressao} valor={pressaoAtual} unidade="hPa" eventoClick={historicoPressao}/></div>
-                <div className='grid place-items-center col-span-3'> <MinMax conjunto={conjunto} parametro="2"/> </div>
-              </p>
-            </article>
-            :
-            tela === 1
-            ?
-            <HistoricoTemp data = {dataAtual} conjunto={conjunto} eventoClick={voltar} />
-            :
-            tela === 2
-            ?
-            <HistoricoPressao data = {dataAtual} conjunto={conjunto} eventoClick={voltar} />
-            :
-            tela === 3
-            ?
-            <HistoricoUmidade data = {dataAtual} conjunto={conjunto} eventoClick={voltar} />
-            :
-            tela === 4
-            ?
-            <HistoricoUV data = {dataAtual} conjunto={conjunto} eventoClick={voltar} />
-            :
-            tela === 5
-            ?
-            <HistoricoVento data = {dataAtual} conjunto={conjunto} eventoClick={voltar} />
-            :
-            tela === 6
-            ?
-            <HistoricoVento data = {dataAtual} conjunto={conjunto} eventoClick={voltar} />
-            :
-            tela === 7
-            ?
-            <HistoricoIndiceCalor data = {dataAtual} conjunto={conjunto} eventoClick={voltar} />
-            :
-            tela === 8
-            ?
-            <HistoricoPrecipitacao data = {dataAtual} conjunto={conjunto} eventoClick={voltar} />
-            :
-            <></>
-          }
-        </section> 
-    </main>
-  );
-}
-
-export default App;
+export default App

@@ -1,0 +1,84 @@
+/*@tailwind base;
+@tailwind components;
+@tailwind utilities;*/
+
+:root{
+	--cor1: #eaecf8;
+	--cor2: #d0cdd7;
+	--cor3: #acb0bd;
+	--cor4: #4c5b61;
+	--cor5: #1a2f36;
+	--cor6: #234b41;
+	--corTexto: #222222;
+	--corFundo: #fefefe;
+	--corVermelho: rgb(220, 20, 60);
+	--corVerde: #629e60;
+	--corAmarelo: #ffb84e;
+	--corBranco: #ffffff;
+	--corVerde: rgb(34, 179, 34);
+	--corAzul: rgb(100, 149, 247);
+	padding: 0;
+	margin: 0;
+}
+
+body{
+  background-color: rgb(100 100 110);
+}
+
+.tela{
+	width: 100%;
+	height: auto;
+}
+
+.tabela{
+	width: 100%;
+}
+
+td{
+	/*background-color: var(--cor3);*/
+	padding: 2px;
+	margin: 0;
+	border: solid 1px grey;	
+}
+
+div{
+	width: max-content;
+}
+
+p{
+	padding: 0;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	font-size: 14px;
+	margin: 0;
+	color: var(--cor2);
+}
+
+.fonte400{
+	font-family: 'Orbitron', sans-serif;
+	font-size: 400%;
+  }
+  
+ .fonte200{
+	font-family: 'Orbitron', sans-serif;
+	font-size: 200%;
+}  
+
+.fonteAmarelo{
+  color: var(--corAmarelo);  
+}
+
+.fonteAzul{
+  color: var(--corAzul);
+}
+
+.fonteVermelho{
+  color: var(--corVermelho);
+}
+
+.fonteBranco{
+  color:  var(--corBranco);
+}
+
+.fonteVerde{
+  color: var(--corVerde);
+}

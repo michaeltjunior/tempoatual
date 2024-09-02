@@ -25,10 +25,10 @@ function App(){
 
     useEffect(()=>
         {
-            fetch('http://api.weatherapi.com/v1/current.json?key=eedebbd2289747d7b40125129242407&q=Criciuma&aqi=no',
+            fetch('https://api.weatherapi.com/v1/current.json?key=eedebbd2289747d7b40125129242407&q=Criciuma&aqi=no',
             {
                 method: 'GET',
-                mode: 'cors',
+                /*mode: 'cors',*/
                 headers: {'Access-Control-Allow-Origin':'*'}
         })
             .then(res => res.json())
